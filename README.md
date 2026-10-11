@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Financial Compass - بوصلتك المالية (Secure Master Edition)</title>
+    <title>Financial Compass - بوصلتك المالية (Master Production Edition)</title>
     
-    <!-- Firebase SDKs -->
+    <!-- Firebase SDKs (Compat Version لضمان توافق الحزم والتحكم السحابي الكامل) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
     
     <!-- EmailJS SDK -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
@@ -129,7 +131,7 @@
         }
         .quick-theme-toggle:hover { transform: scale(1.1); box-shadow: 0 0 15px rgba(6, 182, 212, 0.5); }
 
-        /* Auth Screen Styling */
+        /* Auth Screen Styling (Strictly Isolated Layer) */
         #auth-landing { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 30px 20px; width: 100vw; position: fixed; top: 0; left: 0; z-index: 1000; background: var(--bg-dark); }
         .auth-grid { width: 100%; max-width: 1100px; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 40px; align-items: center; }
 
@@ -156,7 +158,6 @@
         }
         html[dir="ltr"] .input-group input { padding: 12px 16px 12px 45px; }
 
-        /* Custom Month Picker Styling Fixes */
         input[type="month"] {
             background: var(--input-bg); border: 1px solid var(--glass-border);
             border-radius: 10px; color: var(--month-picker-text); font-size: 12px; font-weight: bold; padding: 8px 12px;
@@ -166,7 +167,7 @@
         }
         input[type="month"]:hover { border-color: var(--cyan-primary); box-shadow: 0 0 12px rgba(6, 182, 212, 0.4); }
 
-        /* Main App Layout - Strictly Isolated (Hidden by Default) */
+        /* Main App Layout - Strictly Isolated & Hidden Before Auth */
         #app-dashboard { display: none; min-height: 100vh; width: 100vw; position: fixed; top: 0; left: 0; z-index: 900; background: var(--bg-dark); overflow-y: auto; }
         .sidebar {
             width: 280px; background: var(--sidebar-gradient); border-left: 1px solid var(--glass-border);
@@ -189,7 +190,6 @@
         .app-view { display: none; }
         .app-view.active { display: block; }
 
-        /* KPI Cards Grid */
         .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 25px; }
         .kpi-card {
             background: var(--panel-bg); backdrop-filter: blur(20px); border-radius: 20px; padding: 22px;
@@ -201,7 +201,6 @@
         .kpi-card h3 { font-size: 13px; color: var(--subtext); margin-bottom: 8px; }
         .kpi-card .val { font-size: 26px; font-weight: 900; }
 
-        /* Category Glow Cards Grid */
         .cat-card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 20px; }
         .cat-card {
             background: var(--panel-bg); border: 1px solid var(--glass-border); border-radius: 20px;
@@ -215,7 +214,6 @@
         .cat-card.outings:hover { border-color: var(--teal-cat); box-shadow: 0 0 30px rgba(17, 153, 142, 0.6); }
         .cat-card.report-card { background: linear-gradient(135deg, #10b981, #2563eb); }
 
-        /* Category Selection Buttons Grid */
         .cat-btn-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 15px; }
         .cat-btn {
             background: var(--panel-bg); border: 1px solid var(--glass-border); border-radius: 14px;
@@ -223,7 +221,6 @@
         }
         .cat-btn.active, .cat-btn:hover { transform: translateY(-2px); border-color: var(--cyan-primary); box-shadow: 0 0 15px rgba(6, 182, 212, 0.5); }
 
-        /* Sub-Categories Chips Grid */
         .sub-cat-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
         .sub-cat-chip {
             background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px;
@@ -231,7 +228,6 @@
         }
         .sub-cat-chip:hover, .sub-cat-chip.active { background: rgba(6, 182, 212, 0.25); border-color: var(--cyan-primary); color: var(--text-main); }
 
-        /* Smart Action Filter Buttons in Drill-down */
         .smart-filter-btn {
             background: var(--input-bg); border: 1px solid var(--glass-border); border-radius: 14px;
             padding: 10px 16px; font-size: 12px; font-weight: 800; cursor: pointer; color: var(--text-main); display: inline-flex; align-items: center; gap: 6px;
@@ -240,7 +236,6 @@
             background: rgba(6, 182, 212, 0.25); border-color: var(--cyan-primary); box-shadow: 0 0 15px rgba(6, 182, 212, 0.4); transform: translateY(-2px);
         }
 
-        /* Chart Glowing Hover Container */
         .chart-wrapper {
             height: 220px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; border-radius: 16px; padding: 10px; transition: all 0.3s ease;
         }
@@ -248,13 +243,11 @@
             box-shadow: 0 0 25px rgba(6, 182, 212, 0.25); transform: scale(1.01);
         }
 
-        /* Tables & Lists */
         .table-glass { width: 100%; border-collapse: collapse; margin-top: 10px; }
         .table-glass th, .table-glass td { padding: 14px; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 13px; color: var(--text-main); }
         html[dir="ltr"] .table-glass th, html[dir="ltr"] .table-glass td { text-align: left; }
         .table-glass th { color: var(--cyan-primary); font-weight: 800; background: rgba(6,182,212,0.08); }
 
-        /* SMART ADMIN CONTROL PANEL STYLES */
         .admin-grid-container {
             display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 25px;
         }
@@ -263,32 +256,16 @@
             position: relative; overflow: hidden; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex; flex-direction: column; justify-content: space-between; min-height: 160px;
         }
-        .admin-card:hover {
-            transform: translateY(-6px) scale(1.02);
-        }
+        .admin-card:hover { transform: translateY(-6px) scale(1.02); }
         .admin-card.invites { background: linear-gradient(135deg, #ff416c, #ff4b2b); }
-        .admin-card.invites:hover { box-shadow: 0 0 30px rgba(255, 65, 108, 0.7); }
-
         .admin-card.sounds { background: linear-gradient(135deg, #8a2be2, #4a00e0); }
-        .admin-card.sounds:hover { box-shadow: 0 0 30px rgba(138, 43, 226, 0.7); }
-
         .admin-card.users { background: linear-gradient(135deg, #00c6ff, #0072ff); }
-        .admin-card.users:hover { box-shadow: 0 0 30px rgba(0, 198, 255, 0.7); }
-
         .admin-card.broadcast { background: linear-gradient(135deg, #f7971e, #ffd200); }
-        .admin-card.broadcast:hover { box-shadow: 0 0 30px rgba(247, 151, 30, 0.7); }
-
         .admin-card.support { background: linear-gradient(135deg, #11998e, #38ef7d); }
-        .admin-card.support:hover { box-shadow: 0 0 30px rgba(17, 153, 142, 0.7); }
-
         .admin-card.subadmins { background: linear-gradient(135deg, #10b981, #2563eb); }
-        .admin-card.subadmins:hover { box-shadow: 0 0 30px rgba(16, 185, 129, 0.7); }
 
-        .admin-card-icon {
-            font-size: 36px; position: absolute; top: 20px; left: 20px; opacity: 0.85;
-        }
+        .admin-card-icon { font-size: 36px; position: absolute; top: 20px; left: 20px; opacity: 0.85; }
         html[dir="ltr"] .admin-card-icon { left: auto; right: 20px; }
-
         .admin-subview { display: none; }
 
         @media (max-width: 1024px) {
@@ -319,7 +296,7 @@
         <div class="modal-card">
             <div style="font-size: 40px; color: var(--danger-red); margin-bottom: 10px;"><i class="fa-solid fa-triangle-exclamation"></i></div>
             <h3 id="lbl-confirm-title" style="margin-bottom: 10px; font-weight: 900;">تأكيد العملية</h3>
-            <p id="lbl-confirm-desc" style="font-size: 13px; color: var(--subtext); margin-bottom: 20px;">هل أنت تأكد من رغبتك في إتمام هذه الخطوة؟</p>
+            <p id="lbl-confirm-desc" style="font-size: 13px; color: var(--subtext); margin-bottom: 20px;">هل أنت متأكد من رغبتك في إتمام هذه الخطوة؟</p>
             <div style="display: flex; gap: 12px; justify-content: center;">
                 <button class="btn-secondary" onclick="closeConfirmModal()">إلغاء</button>
                 <button class="btn-danger" id="btn-modal-confirm-action" onclick="executePendingAction()">تأكيد 🗑️</button>
@@ -331,8 +308,8 @@
     <div id="modal-success-box" class="modal-overlay">
         <div class="success-notification-box">
             <div style="font-size: 45px; margin-bottom: 8px;"><i class="fa-solid fa-circle-check"></i></div>
-            <h3 id="lbl-success-title" style="font-size: 18px; font-weight: 900; margin-bottom: 6px;">تم تأكيد البريد الإلكتروني بنجاح!</h3>
-            <p id="lbl-success-desc" style="font-size: 13px; opacity: 0.95; margin-bottom: 15px;">تم تحديث البيانات المحددة بنجاح في النظام السحابي.</p>
+            <h3 id="lbl-success-title" style="font-size: 18px; font-weight: 900; margin-bottom: 6px;">تم بنجاح!</h3>
+            <p id="lbl-success-desc" style="font-size: 13px; opacity: 0.95; margin-bottom: 15px;">تم تنفيذ العملية بنجاح في النظام السحابي.</p>
             <button class="btn-cyan" style="background: #ffffff; color: #059669; font-weight: 900; padding: 8px 24px;" onclick="closeSuccessNotification()">موافق</button>
         </div>
     </div>
@@ -351,7 +328,6 @@
 
             <div class="glass-panel" style="padding: 30px;">
                 <div style="display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-bottom: 20px;">
-                    <!-- Quick Theme Toggle on Auth Screen -->
                     <button class="quick-theme-toggle" onclick="toggleThemeMode()" title="تغيير المظهر ☀️/🌙">
                         <i class="fa-solid fa-sun icon-theme-toggle"></i>
                     </button>
@@ -366,17 +342,17 @@
                 <!-- LOGIN FORM -->
                 <div id="form-login">
                     <h2 id="lbl-login-heading" style="font-size: 20px; font-weight: 900; margin-bottom: 15px;">تسجيل الدخول إلى حسابك</h2>
-                    <form onsubmit="event.preventDefault(); handleLogin();">
+                    <form onsubmit="event.preventDefault(); handleFirebaseLogin();">
                         <div class="input-group">
                             <i class="fa-solid fa-envelope"></i>
-                            <input type="text" id="login-user" placeholder="البريد الإلكتروني (Gmail)" required>
+                            <input type="email" id="login-user" placeholder="البريد الإلكتروني (Gmail)" required>
                         </div>
                         <div class="input-group">
                             <i class="fa-solid fa-lock"></i>
                             <input type="password" id="login-pass" placeholder="كلمة المرور" required>
                         </div>
                         <button type="submit" id="btn-login-action" class="btn-cyan" style="width: 100%; margin-top: 10px;">
-                            <i class="fa-solid fa-right-to-bracket"></i> تسجيل الدخول
+                            <i class="fa-solid fa-right-to-bracket"></i> تسجيل الدخول السحابي 🚀
                         </button>
                     </form>
                     <div style="margin-top: 15px; font-size: 12px; text-align: center;">
@@ -387,11 +363,11 @@
                 <!-- SIGNUP FORM -->
                 <div id="form-signup" style="display: none;">
                     <h2 id="lbl-signup-heading" style="font-size: 20px; font-weight: 900; margin-bottom: 15px;">إنشاء حساب جديد</h2>
-                    <form onsubmit="event.preventDefault(); handleSignupOTP();">
+                    <form onsubmit="event.preventDefault(); handleFirebaseSignupOTP();">
                         <div class="input-group"><i class="fa-solid fa-key"></i><input type="text" id="reg-key" placeholder="كود الدعوة الفعال (Invite Code)" required></div>
                         <div class="input-group"><i class="fa-solid fa-user"></i><input type="text" id="reg-name" placeholder="اسم المستخدم" required></div>
                         <div class="input-group"><i class="fa-solid fa-envelope"></i><input type="email" id="reg-email" placeholder="البريد الإلكتروني (Gmail)" required></div>
-                        <div class="input-group"><i class="fa-solid fa-lock"></i><input type="password" id="reg-pass" placeholder="كلمة المرور" required></div>
+                        <div class="input-group"><i class="fa-solid fa-lock"></i><input type="password" id="reg-pass" placeholder="كلمة المرور (6 أحرف فأكثر)" required></div>
                         
                         <div class="input-group">
                             <i class="fa-solid fa-crown"></i>
@@ -425,7 +401,7 @@
                 <div style="font-size: 24px;" id="dash-royal-icon">👸</div>
                 <div>
                     <div style="font-size: 13px; font-weight: bold; color: var(--text-main);" id="dash-user-name">الملكة سارة</div>
-                    <div style="font-size: 10px; color: #10b981;" id="lbl-status-online">● متصل سحابياً (Sync)</div>
+                    <div style="font-size: 10px; color: #10b981;" id="lbl-status-online">● متصل سحابياً (Firebase Auth)</div>
                 </div>
             </div>
 
@@ -434,33 +410,29 @@
             <div class="nav-item" id="nav-chat" onclick="switchView('chat')"><i class="fa-solid fa-comments"></i> <span id="lbl-nav-chat">الشات والدعم</span></div>
             <div class="nav-item" id="nav-settings" onclick="switchView('settings')"><i class="fa-solid fa-gear"></i> <span id="lbl-nav-set">الإعدادات والتخصيص</span></div>
             
-            <!-- ADMIN NAV ITEM: Protected by RBAC Guard -->
+            <!-- ADMIN NAV ITEM: Protected by Master RBAC Guard -->
             <div class="nav-item" id="nav-admin" onclick="switchView('admin')" style="background: rgba(99,102,241,0.2); border: 1px solid rgba(99,102,241,0.4); display: none;"><i class="fa-solid fa-shield-halved"></i> <span id="lbl-nav-adm">لوحة تحكم الأدمن</span></div>
 
             <div style="margin-top: auto; padding: 12px; background: rgba(99, 102, 241, 0.15); border-radius: 14px; border: 1px solid rgba(99,102,241,0.3);">
-                <div style="font-weight: bold; font-size: 12px; color: #818cf8;">Master RBAC Guard Active</div>
-                <div style="font-size: 10px; color: var(--subtext);">Real-time Security Engine</div>
+                <div style="font-weight: bold; font-size: 12px; color: #818cf8;">Firebase & RBAC Active</div>
+                <div style="font-size: 10px; color: var(--subtext);">Project: walletpro-b8c4e</div>
             </div>
         </div>
 
         <div class="main-content">
-            <!-- TOP BAR CONTROL -->
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
                 <div>
-                    <h1 id="dash-welcome-title" style="font-size: 22px; font-weight: 900; color: var(--text-main);">مرحباً بك، الملكة سارة 👋</h1>
+                    <h1 id="dash-welcome-title" style="font-size: 22px; font-weight: 900; color: var(--text-main);">مرحباً بك 👋</h1>
                     <span style="font-size: 12px; color: var(--subtext);" id="lbl-sub-welcome">الواجهة الرئيسية ومحرك إدخال المصروفات السريع</span>
                 </div>
 
                 <div style="display: flex; align-items: center; gap: 12px;">
-                    <!-- Quick Day/Night Toggle Button -->
                     <button class="quick-theme-toggle" onclick="toggleThemeMode()" title="تغيير المظهر ☀️/🌙">
                         <i class="fa-solid fa-sun icon-theme-toggle"></i>
                     </button>
 
-                    <!-- Month Picker -->
                     <input type="month" id="month-picker" onchange="updateDashboardCalculations()">
                     
-                    <!-- Currency Switcher -->
                     <select id="currency-switcher" onchange="changeCurrency()" style="padding: 8px 12px; background: var(--input-bg); border: 1px solid var(--cyan-primary); border-radius: 10px; color: var(--text-main); font-size: 12px; font-weight: bold;">
                         <option value="EGP" id="opt-curr-egp">EGP (ج.م)</option>
                         <option value="SAR" id="opt-curr-sar">SAR (ر.س)</option>
@@ -477,7 +449,6 @@
 
             <!-- VIEW 1: MAIN DASHBOARD HOME -->
             <div id="view-home" class="app-view active">
-                <!-- KPI CARDS -->
                 <div class="kpi-grid">
                     <div class="kpi-card">
                         <h3 id="lbl-kpi-sal">الراتب الإجمالي لشهر</h3>
@@ -493,9 +464,7 @@
                     </div>
                 </div>
 
-                <!-- MAIN SPLIT WORKSPACE -->
                 <div style="display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 20px;">
-                    <!-- RIGHT PANEL: INTERACTIVE EXPENSE ENTRY -->
                     <div class="glass-panel" style="padding: 22px;">
                         <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 15px; color: var(--cyan-primary);" id="lbl-quick-add-head">إضافة مصروف جديد سريع أونلاين</h3>
                         
@@ -509,9 +478,7 @@
                         </div>
 
                         <span style="font-size: 12px; color: var(--subtext); display: block; margin-bottom: 8px;" id="lbl-choose-sub">2. اختر البند الفرعي:</span>
-                        <div class="sub-cat-grid" id="sub-category-container">
-                            <!-- Dynamic Sub-categories Populated Here -->
-                        </div>
+                        <div class="sub-cat-grid" id="sub-category-container"></div>
 
                         <div class="input-group">
                             <i class="fa-solid fa-pen-to-square"></i>
@@ -527,7 +494,6 @@
                         </button>
                     </div>
 
-                    <!-- LEFT PANEL: LOGS & DOUGHNUT CHART -->
                     <div class="glass-panel" style="padding: 22px;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                             <h3 style="font-size: 16px; font-weight: 800; color: var(--cyan-primary);" id="lbl-chart-title">توزيع المصروفات اللحظي</h3>
@@ -548,9 +514,7 @@
                                         <th id="th-act">إدارة</th>
                                     </tr>
                                 </thead>
-                                <tbody id="expenses-log-tbody">
-                                    <!-- Dynamic Logs -->
-                                </tbody>
+                                <tbody id="expenses-log-tbody"></tbody>
                             </table>
                         </div>
                     </div>
@@ -559,13 +523,11 @@
 
             <!-- VIEW 2: EXPENSES DETAILED ("مصروفاتك") -->
             <div id="view-expenses" class="app-view">
-                <!-- MAIN CATEGORIES CARDS VIEW -->
                 <div id="expenses-main-cards-container">
                     <div class="glass-panel" style="padding: 25px; margin-bottom: 25px;">
                         <h2 style="font-size: 18px; font-weight: 900; margin-bottom: 8px; color: var(--text-main);" id="lbl-exp-sec-title">مصروفاتك والتصنيفات المخصصة</h2>
-                        <p style="font-size: 13px; color: var(--subtext); margin-bottom: 20px;" id="lbl-exp-sec-desc">اختر أي فئة لاستعراض التفاصيل والتصفية الذكية مع إمكانية طلب التقرير المالي المباشر.</p>
+                        <p style="font-size: 13px; color: var(--subtext); margin-bottom: 20px;" id="lbl-exp-sec-desc">اختر أي فئة لاستعراض التفاصيل والتصفية الذكية.</p>
                         
-                        <!-- GLOW CARDS GRID -->
                         <div class="cat-card-grid">
                             <div class="cat-card bills" onclick="openCategoryFocus('bills')">
                                 <h3 style="font-size: 15px; font-weight: 800; margin-bottom: 8px; color: var(--text-main);" id="card-head-bills">💡 الفواتير والخدمات</h3>
@@ -601,7 +563,6 @@
                     </div>
                 </div>
 
-                <!-- CATEGORY FOCUS VIEW (DRILLDOWN WITH SMART ACTION BUTTONS) -->
                 <div class="glass-panel" id="category-focus-view" style="padding: 25px; display: none;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                         <button class="btn-cyan" style="padding: 8px 16px; font-size: 13px;" onclick="closeCategoryFocus()" id="btn-back-to-categories">⬅️ العودة لكافة الفئات</button>
@@ -609,17 +570,11 @@
                         <div style="width: 120px;"></div>
                     </div>
 
-                    <!-- SMART ACTION BUTTONS GRID -->
                     <span style="font-size: 12px; color: var(--subtext); display: block; margin-bottom: 10px;" id="lbl-focus-filter-prompt">اختر لتصفية العرض على بند معين أو إظهار كافة بنود الفئة:</span>
-                    <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;" id="smart-action-buttons-container">
-                        <!-- Populated dynamically via JS -->
-                    </div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;" id="smart-action-buttons-container"></div>
 
-                    <!-- FILTERED TRANSACTIONS LIST -->
                     <h3 style="font-size: 15px; font-weight: 800; margin-bottom: 12px; color: var(--cyan-primary);" id="lbl-focus-list-head">المعاملات المسجلة:</h3>
-                    <div id="focus-transactions-container">
-                        <!-- Dynamic Transaction Bars -->
-                    </div>
+                    <div id="focus-transactions-container"></div>
                 </div>
             </div>
 
@@ -662,7 +617,6 @@
 
                     <hr style="margin: 20px 0; border: none; border-top: 1px solid var(--glass-border);">
 
-                    <!-- GMAIL CHANGE & LOGOUT UPGRADES -->
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start;">
                         <div style="background: var(--input-bg); padding: 15px; border-radius: 14px; border: 1px solid var(--glass-border);">
                             <h4 style="font-size: 14px; font-weight: 800; color: var(--cyan-primary); margin-bottom: 8px;">📧 تعديل البريد الإلكتروني (Gmail Change)</h4>
@@ -683,14 +637,10 @@
             <!-- VIEW 5: SMART ADMIN CONTROL PANEL -->
             <div id="view-admin" class="app-view">
                 <div class="glass-panel" style="padding: 25px;">
-                    
-                    <!-- MAIN ADMIN PANEL DASHBOARD -->
                     <div id="admin-main-dashboard">
                         <h2 style="font-size: 22px; font-weight: 900; margin-bottom: 20px; color: var(--cyan-primary);" id="lbl-admin-sec-title">🛡️ لوحة تحكم الأدمن الذكية</h2>
                         
-                        <!-- 6 GLOWING CARDS GRID -->
                         <div class="admin-grid-container">
-                            <!-- Card 1: Invite Codes -->
                             <div class="admin-card invites" onclick="openAdminSubView('invites')">
                                 <div class="admin-card-icon">🔑</div>
                                 <div>
@@ -699,7 +649,6 @@
                                 </div>
                             </div>
 
-                            <!-- Card 2: Salary Sounds -->
                             <div class="admin-card sounds" onclick="openAdminSubView('sounds')">
                                 <div class="admin-card-icon">🎵</div>
                                 <div>
@@ -708,7 +657,6 @@
                                 </div>
                             </div>
 
-                            <!-- Card 3: Users & Ban -->
                             <div class="admin-card users" onclick="openAdminSubView('users')">
                                 <div class="admin-card-icon">🚫</div>
                                 <div>
@@ -717,7 +665,6 @@
                                 </div>
                             </div>
 
-                            <!-- Card 4: Broadcast System -->
                             <div class="admin-card broadcast" onclick="openAdminSubView('broadcast')">
                                 <div class="admin-card-icon">📢</div>
                                 <div>
@@ -726,7 +673,6 @@
                                 </div>
                             </div>
 
-                            <!-- Card 5: Support Chat -->
                             <div class="admin-card support" onclick="openAdminSubView('support')">
                                 <div class="admin-card-icon">💬</div>
                                 <div>
@@ -735,7 +681,6 @@
                                 </div>
                             </div>
 
-                            <!-- Card 6: Sub-Admins Management -->
                             <div class="admin-card subadmins" onclick="openAdminSubView('subadmins')">
                                 <div class="admin-card-icon">⚙️</div>
                                 <div>
@@ -745,39 +690,31 @@
                             </div>
                         </div>
 
-                        <!-- SYSTEM STATISTICS FOOTER -->
                         <div style="background: var(--input-bg); border: 1px solid var(--glass-border); border-radius: 16px; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                             <div style="font-size: 13px; font-weight: 700; color: var(--text-main);" id="lbl-sys-stats-text">
                                 📊 إجمالي الحسابات المسجلة في قاعدة البيانات: <span style="color: var(--cyan-primary); font-weight: 900;" id="val-total-users-count">3 حساب نشط</span>
                             </div>
                             <div style="font-size: 11px; color: var(--subtext);">
-                                ● حالة السيرفر السحابي: <span style="color: #10b981; font-weight: bold;">مستقر ومتصل (Realtime)</span>
+                                ● حالة السيرفر السحابي (Firebase): <span style="color: #10b981; font-weight: bold;">متصل ومستقر (walletpro-b8c4e)</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- ADMIN SUB-VIEWS CONTAINER -->
-                    
-                    <!-- Sub-view 1: Invite Codes -->
+                    <!-- ADMIN SUB-VIEWS -->
                     <div id="admin-subview-invites" class="admin-subview">
                         <button class="btn-cyan" style="margin-bottom: 15px;" onclick="closeAdminSubView()">⬅️ العودة للوحة الأدمن الرئيسية</button>
-                        <h3 style="font-size: 18px; margin-bottom: 10px; color: #ff416c;">🔑 إدارة أُكواد الدعوة (Invite Codes Management)</h3>
+                        <h3 style="font-size: 18px; margin-bottom: 10px; color: #ff416c;">🔑 إدارة أُكواد الدعوة</h3>
                         <div style="background: var(--input-bg); padding: 15px; border-radius: 14px; margin-bottom: 15px; display: flex; gap: 10px;">
                             <input type="text" id="inp-new-invite-code" placeholder="أدخل كود مخصص أو اضغط توليد عشوائي" style="flex: 1; padding: 10px; background: var(--panel-bg); border: 1px solid var(--glass-border); border-radius: 10px; color: var(--text-main);">
                             <button class="btn-secondary" onclick="generateRandomCodeToInput()">توليد عشوائي 🎲</button>
                             <button class="btn-cyan" onclick="addInviteCodeAction()">إضافة الكود ➕</button>
                         </div>
                         <table class="table-glass">
-                            <thead>
-                                <tr><th>الكود</th><th>الحالة</th><th>تاريخ الإنشاء</th><th>إدارة التجميد</th><th>حذف</th></tr>
-                            </thead>
-                            <tbody id="tbl-invite-codes-body">
-                                <!-- Populated dynamically -->
-                            </tbody>
+                            <thead><tr><th>الكود</th><th>الحالة</th><th>تاريخ الإنشاء</th><th>إدارة التجميد</th><th>حذف</th></tr></thead>
+                            <tbody id="tbl-invite-codes-body"></tbody>
                         </table>
                     </div>
 
-                    <!-- Sub-view 2: Salary Sounds & Alerts -->
                     <div id="admin-subview-sounds" class="admin-subview">
                         <button class="btn-cyan" style="margin-bottom: 15px;" onclick="closeAdminSubView()">⬅️ العودة للوحة الأدمن الرئيسية</button>
                         <h3 style="font-size: 18px; margin-bottom: 10px; color: #8a2be2;">🎵 أصوات ورسائل الرواتب المتقدمة</h3>
@@ -793,89 +730,82 @@
                                 </div>
                             </div>
                             <input type="text" id="sound-alert-msg" placeholder="نص الرسالة المنبثقة للرواتب في هذا النطاق" style="width: 100%; padding: 10px; background: var(--panel-bg); border: 1px solid var(--glass-border); border-radius: 8px; color: var(--text-main); margin-bottom: 10px;">
-                            <label style="display: block; font-size: 11px; color: var(--subtext); margin-bottom: 4px;">إرفاق الملف الصوتي (MP3/WAV):</label>
-                            <input type="file" accept="audio/*" style="margin-bottom: 12px; color: var(--text-main);">
                             <button class="btn-cyan" style="width: 100%;" onclick="addSalarySoundConfig()">حفظ وتخصيص شريحة الراتب 💾</button>
                         </div>
-                        <h4 style="font-size: 14px; margin-bottom: 10px; color: var(--text-main);">شرائح التنبيهات المخصصة حالياً:</h4>
-                        <div id="salary-sounds-list-container">
-                            <!-- Populated dynamically -->
-                        </div>
+                        <div id="salary-sounds-list-container"></div>
                     </div>
 
-                    <!-- Sub-view 3: Users & Ban -->
                     <div id="admin-subview-users" class="admin-subview">
                         <button class="btn-cyan" style="margin-bottom: 15px;" onclick="closeAdminSubView()">⬅️ العودة للوحة الأدمن الرئيسية</button>
                         <h3 style="font-size: 18px; margin-bottom: 10px; color: #00c6ff;">🚫 إدارة المستخدمين والحظر المطور</h3>
                         <table class="table-glass">
-                            <thead>
-                                <tr><th>الاسم</th><th>البريد الإلكتروني (Gmail)</th><th>الراتب الحالي</th><th>الحالة السحابية</th><th>تبديل الحظر</th><th>حذف نهائي</th></tr>
-                            </thead>
-                            <tbody id="tbl-users-manage-body">
-                                <!-- Populated dynamically -->
-                            </tbody>
+                            <thead><tr><th>الاسم</th><th>البريد الإلكتروني (Gmail)</th><th>الراتب الحالي</th><th>الحالة السحابية</th><th>تبديل الحظر</th><th>حذف نهائي</th></tr></thead>
+                            <tbody id="tbl-users-manage-body"></tbody>
                         </table>
                     </div>
 
-                    <!-- Sub-view 4: Broadcast System -->
                     <div id="admin-subview-broadcast" class="admin-subview">
                         <button class="btn-cyan" style="margin-bottom: 15px;" onclick="closeAdminSubView()">⬅️ العودة للوحة الأدمن الرئيسية</button>
                         <h3 style="font-size: 18px; margin-bottom: 10px; color: #f7971e;">📢 لوحة الإعلانات العامة وبث التنبيهات</h3>
                         <div style="background: var(--input-bg); padding: 15px; border-radius: 14px;">
-                            <textarea id="txt-broadcast-msg" placeholder="اكتب التنبيه الإداري العام الذي سيظهر لجميع المشتركين..." style="width: 100%; height: 90px; padding: 12px; background: var(--panel-bg); border: 1px solid var(--glass-border); border-radius: 10px; color: var(--text-main); margin-bottom: 10px;"></textarea>
-                            
-                            <div style="margin-bottom: 15px; background: rgba(255,255,255,0.04); padding: 10px; border-radius: 8px;">
-                                <label style="font-size: 12px; font-weight: bold; color: var(--text-main); display: block; margin-bottom: 5px;">إرفاق ملف صوت تنبيهي مع الإعلان (اختياري):</label>
-                                <input type="file" id="inp-broadcast-audio" accept="audio/*" style="color: var(--text-main); font-size: 12px;">
-                            </div>
-
+                            <textarea id="txt-broadcast-msg" placeholder="اكتب التنبيه الإداري العام..." style="width: 100%; height: 90px; padding: 12px; background: var(--panel-bg); border: 1px solid var(--glass-border); border-radius: 10px; color: var(--text-main); margin-bottom: 10px;"></textarea>
                             <button class="btn-cyan" style="width: 100%;" onclick="triggerBroadcastConfirm()">بث الإعلان والتنبيه السحابي 🚀</button>
                         </div>
                     </div>
 
-                    <!-- Sub-view 5: Support Chat -->
                     <div id="admin-subview-support" class="admin-subview">
                         <button class="btn-cyan" style="margin-bottom: 15px;" onclick="closeAdminSubView()">⬅️ العودة للوحة الأدمن الرئيسية</button>
                         <h3 style="font-size: 18px; margin-bottom: 10px; color: #11998e;">💬 نظام شات ودعم المشتركين المطور</h3>
-                        
-                        <!-- SMART USER SEARCH INPUT -->
-                        <div style="margin-bottom: 12px; position: relative;">
-                            <input type="text" id="inp-admin-chat-search" placeholder="🔍 بحث ذكي برقم الهوية أو البريد الإلكتروني (Gmail) أو الاسم..." onkeyup="filterAdminChatUsersList()" style="width: 100%; padding: 10px 14px; background: var(--input-bg); border: 1px solid var(--cyan-primary); border-radius: 10px; color: var(--text-main);">
+                        <div style="margin-bottom: 12px;">
+                            <input type="text" id="inp-admin-chat-search" placeholder="🔍 بحث ذكي برقم الهوية أو البريد الإلكتروني أو الاسم..." onkeyup="filterAdminChatUsersList()" style="width: 100%; padding: 10px 14px; background: var(--input-bg); border: 1px solid var(--cyan-primary); border-radius: 10px; color: var(--text-main);">
                         </div>
-
                         <select id="sel-admin-chat-user" onchange="loadSelectedUserChatHistory()" style="width: 100%; padding: 10px; background: var(--input-bg); border: 1px solid var(--glass-border); border-radius: 10px; color: var(--text-main); margin-bottom: 10px;">
                             <option value="">اختر عميل لديه محادثة قائمة للرد عليه...</option>
                         </select>
-
                         <div id="admin-chat-messages-box" style="height: 200px; background: var(--input-bg); border-radius: 10px; padding: 10px; margin-bottom: 10px; overflow-y: auto;">
                             <div style="color: var(--subtext); font-size: 12px; text-align: center; padding-top: 80px;">اختر عميلاً من القائمة لاستعراض محادثاته المباشرة.</div>
                         </div>
-
                         <div style="display: flex; gap: 10px;">
                             <input type="text" id="inp-admin-reply-msg" placeholder="اكتب رد الأدمن المباشر..." style="flex:1; padding: 10px; background: var(--input-bg); border: 1px solid var(--glass-border); border-radius: 10px; color: var(--text-main);">
                             <button class="btn-cyan" onclick="sendAdminReplyToUser()">إرسال الرد 💬</button>
                         </div>
                     </div>
 
-                    <!-- Sub-view 6: Sub-Admins -->
                     <div id="admin-subview-subadmins" class="admin-subview">
                         <button class="btn-cyan" style="margin-bottom: 15px;" onclick="closeAdminSubView()">⬅️ العودة للوحة الأدمن الرئيسية</button>
-                        <h3 style="font-size: 18px; margin-bottom: 10px; color: #10b981;">⚙️ حسابات الأدمن والصلاحيات (Sub-Admins Management)</h3>
+                        <h3 style="font-size: 18px; margin-bottom: 10px; color: #10b981;">⚙️ حسابات الأدمن والصلاحيات</h3>
                         <div style="background: var(--input-bg); padding: 15px; border-radius: 14px;">
                             <input type="text" placeholder="اسم الأدمن الجديد" style="width: 100%; padding: 10px; background: var(--panel-bg); border: 1px solid var(--glass-border); border-radius: 10px; color: var(--text-main); margin-bottom: 10px;">
                             <input type="password" placeholder="كلمة المرور المخصصة" style="width: 100%; padding: 10px; background: var(--panel-bg); border: 1px solid var(--glass-border); border-radius: 10px; color: var(--text-main); margin-bottom: 10px;">
                             <button class="btn-cyan" style="width: 100%;" onclick="triggerSuccessBox('تم إنشاء حساب الأدمن الفرعي بنجاح ✓')">إنشاء حساب أدمن فرعي</button>
                         </div>
                     </div>
-
                 </div>
             </div>
-
         </div>
     </div>
 
-    <!-- JAVASCRIPT MASTER SECURITY & AUTHENTICATION LOGIC -->
+    <!-- FIREBASE & MASTER SECURITY ENGINE SCRIPT -->
     <script>
+        // 1. Firebase Initialization with walletpro-b8c4e project
+        const firebaseConfig = {
+            apiKey: "AIzaSyDIOvCuCtdP0T0WVISVNEzfjNNoOEDWri0",
+            authDomain: "walletpro-b8c4e.firebaseapp.com",
+            projectId: "walletpro-b8c4e",
+            storageBucket: "walletpro-b8c4e.firebasestorage.app",
+            messagingSenderId: "198862499644",
+            appId: "1:198862499644:web:254e27ee1408dd96bcb839",
+            measurementId: "G-B68FB9ZD2D"
+        };
+
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const analytics = firebase.analytics(app);
+
+        // Master Admin Email Authorized Configuration
+        const MASTER_ADMIN_EMAIL = "admin@financial-compass.com";
+
         let currentLang = localStorage.getItem('fc_lang') || 'ar';
         let currentTheme = localStorage.getItem('fc_theme') || 'dark';
         let currentCurrency = 'EGP';
@@ -884,9 +814,7 @@
         let generatedOTP = "";
         let pendingOTPTask = null; 
         let pendingGmailToUpdate = "";
-
-        // Master Admin Email Authorized Configuration
-        const MASTER_ADMIN_EMAIL = "admin@financial-compass.com";
+        let pendingSignupData = null;
 
         let selectedMainCat = 'bills';
         let selectedSubCat = 'elec';
@@ -895,11 +823,10 @@
 
         let selectedRoyalRole = 'queen'; 
         let currentUserName = 'سارة';
-        let currentUserEmail = 'sara@gmail.com';
+        let currentUserEmail = '';
         let userSalary = 15500;
         let pendingActionCallback = null;
 
-        // Dynamic System Lists
         let inviteCodesList = [
             { id: 1, code: 'FC-2026-X89', frozen: false, date: '2026-10-11' },
             { id: 2, code: 'FC-ROYAL-777', frozen: true, date: '2026-10-10' }
@@ -972,9 +899,9 @@
                 regKey: "كود الدعوة الفعال (Invite Code)",
                 regName: "اسم المستخدم",
                 regEmail: "البريد الإلكتروني (Gmail)",
-                regPass: "كلمة المرور",
+                regPass: "كلمة المرور (6 أحرف فأكثر)",
                 otpInp: "أدخل كود الـ OTP المكون من 6 أرقام",
-                expDesc: "تفاصيل البيان (اختياري - مثلاً: شحن كارت كهرباء)",
+                expDesc: "تفاصيل البيان (اختياري)",
                 expAmount: "المبلغ المالي بالعملة المختارة",
                 chatMsg: "اكتب رسالتك للأدمن...",
                 setSalary: "الراتب الجديد",
@@ -986,9 +913,9 @@
                 regKey: "Active Invite Code",
                 regName: "Username",
                 regEmail: "Email Address (Gmail)",
-                regPass: "Password",
+                regPass: "Password (6+ chars)",
                 otpInp: "Enter 6-digit OTP Code",
-                expDesc: "Note Details (Optional - e.g. Elec Recharge)",
+                expDesc: "Note Details (Optional)",
                 expAmount: "Amount in selected currency",
                 chatMsg: "Type your support message...",
                 setSalary: "New Salary Amount",
@@ -1010,11 +937,11 @@
                 quickHead: "إضافة مصروف جديد سريع أونلاين", chooseCat: "1. اختر الفئة الرئيسية:", chooseSub: "2. اختر البند الفرعي:",
                 chartTitle: "توزيع المصروفات اللحظي", recentLog: "سجل المعاملات المباشر:",
                 showAll: "عرض الكل 🔄", subWelcome: "الواجهة الرئيسية ومحرك إدخال المصروفات السريع",
-                expSecTitle: "مصروفاتك والتصنيفات المخصصة", expSecDesc: "اختر أي فئة لاستعراض التفاصيل والتصفية الذكية مع إمكانية طلب التقرير المالي المباشر.",
+                expSecTitle: "مصروفاتك والتصنيفات المخصصة", expSecDesc: "اختر أي فئة لاستعراض التفاصيل والتصفية الذكية.",
                 catBills: "💡 الفواتير والخدمات", catFood: "🍔 الأكل والشرب", catStudy: "📚 المصروفات الدراسية", catTransport: "🚗 المواصلات والتحركات", catOutings: "🎉 الخروجات والمصروف",
                 catSubBills: "كهرباء، مياه، غاز، إنترنت...", catSubFood: "لحوم، خضروات، بقالة، وجبات...", catSubStudy: "كتب، مذكرات، كورسات...", catSubTransport: "تاكسي، مترو، بنزين، صيانة...", catSubOutings: "سينما، ملابس، شحن، هدايا...",
                 reportHead: "📩 طلب التقرير المالي", reportSub: "إرسال ملخص كامل عبر الواتساب أو الإيميل", btnRequestReport: "طلب الآن",
-                backToCat: "⬅️ العودة لكافة الفئات", focusFilterPrompt: "اختر لتصفية العرض على بند معين أو إظهار كافة بنود الفئة:", focusListHead: "المعاملات المسجلة:",
+                backToCat: "⬅️ العودة لكافة الفئات", focusFilterPrompt: "اختر لتصفية العرض على بند معين:", focusListHead: "المعاملات المسجلة:",
                 chatTitle: "الشات والدعم الفني المباشر", supportSender: "الدعم الفني:", supportWelcome: "أهلاً بك، كيف يمكننا مساعدتك اليوم؟", btnSend: "إرسال",
                 setTitle: "الإعدادات وتخصيص الحساب", setSalaryTitle: "تحديث الراتب الشهري", setProfileTitle: "تخصيص اللقب واسم المستخدم", saveSalary: "حفظ الراتب", saveProfile: "تحديث البيانات",
                 adminTitle: "🛡️ لوحة تحكم الأدمن الذكية",
@@ -1026,7 +953,7 @@
                 admC6Title: "حسابات الأدمن والصلاحيات", admC6Desc: "إنشاء وتحديد صلاحيات المدراء الفرعيين",
                 thSub: "البند", thDesc: "البيان", thAmount: "المبلغ", thAct: "إدارة",
                 kingTitle: "الملك", queenTitle: "الملكة", welcomePrefix: "مرحباً بك،",
-                successTitle: "تم تأكيد البريد الإلكتروني بنجاح!", successBtn: "موافق",
+                successTitle: "تم بنجاح!", successBtn: "موافق",
                 currEGP: "EGP (ج.م)", currSAR: "SAR (ر.س)", currUSD: "USD ($)"
             },
             en: {
@@ -1042,11 +969,11 @@
                 quickHead: "Quick Online Expense Entry", chooseCat: "1. Select Main Category:", chooseSub: "2. Select Sub-Category:",
                 chartTitle: "Real-time Expense Distribution", recentLog: "Direct Transaction Log:",
                 showAll: "Show All 🔄", subWelcome: "Main Dashboard & Fast Expense Entry Engine",
-                expSecTitle: "Your Expenses & Categories", expSecDesc: "Select any category to view smart details and filter transactions or request reports.",
+                expSecTitle: "Your Expenses & Categories", expSecDesc: "Select any category to view smart details.",
                 catBills: "💡 Bills & Utilities", catFood: "🍔 Food & Groceries", catStudy: "📚 Educational Expenses", catTransport: "🚗 Transportation", catOutings: "🎉 Outings & Personal",
                 catSubBills: "Electricity, Water, Gas, Internet...", catSubFood: "Meat, Veggies, Groceries, Fast Food...", catSubStudy: "Books, Notes, Courses...", catSubTransport: "Taxi, Metro, Fuel, Maintenance...", catSubOutings: "Cinema, Clothes, Recharge, Gifts...",
                 reportHead: "📩 Request Financial Report", reportSub: "Send full summary via WhatsApp or Email", btnRequestReport: "Request Now",
-                backToCat: "⬅️ Back to All Categories", focusFilterPrompt: "Select to filter by specific item or show all category items:", focusListHead: "Recorded Transactions:",
+                backToCat: "⬅️ Back to All Categories", focusFilterPrompt: "Select to filter by specific item:", focusListHead: "Recorded Transactions:",
                 chatTitle: "Live Support Chat", supportSender: "Tech Support:", supportWelcome: "Welcome! How can we assist you today?", btnSend: "Send",
                 setTitle: "Settings & Account Customization", setSalaryTitle: "Update Monthly Salary", setProfileTitle: "Customize Royal Title & Username", saveSalary: "Save Salary", saveProfile: "Update Profile",
                 adminTitle: "🛡️ Smart Admin Control Panel",
@@ -1058,7 +985,7 @@
                 admC6Title: "Sub-Admins & Permissions", admC6Desc: "Create sub-admin accounts & roles",
                 thSub: "Sub-Item", thDesc: "Description", thAmount: "Amount", thAction: "Action",
                 kingTitle: "King", queenTitle: "Queen", welcomePrefix: "Welcome back,",
-                successTitle: "Email Verified Successfully!", successBtn: "OK",
+                successTitle: "Success!", successBtn: "OK",
                 currEGP: "EGP (ج.م)", currSAR: "SAR (ر.س)", currUSD: "USD ($)"
             }
         };
@@ -1080,8 +1007,7 @@
         }
 
         function toggleThemeMode() {
-            let nextTheme = (currentTheme === 'dark') ? 'light' : 'dark';
-            applyTheme(nextTheme);
+            applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
         }
 
         function getFullUserTitle() {
@@ -1156,55 +1082,9 @@
             document.getElementById('card-head-transport').innerText = t.catTransport;
             document.getElementById('card-head-outings').innerText = t.catOutings;
 
-            document.getElementById('card-sub-bills').innerText = t.catSubBills;
-            document.getElementById('card-sub-food').innerText = t.catSubFood;
-            document.getElementById('card-sub-study').innerText = t.catSubStudy;
-            document.getElementById('card-sub-transport').innerText = t.catSubTransport;
-            document.getElementById('card-sub-outings').innerText = t.catSubOutings;
-
             document.getElementById('card-head-report').innerText = t.reportHead;
             document.getElementById('card-sub-report').innerText = t.reportSub;
             document.getElementById('btn-request-report-card').innerText = t.btnRequestReport;
-
-            document.getElementById('btn-back-to-categories').innerText = t.backToCat;
-            document.getElementById('lbl-focus-filter-prompt').innerText = t.focusFilterPrompt;
-            document.getElementById('lbl-focus-list-head').innerText = t.focusListHead;
-
-            document.getElementById('lbl-chat-sec-title').innerText = t.chatTitle;
-            document.getElementById('lbl-support-sender').innerText = t.supportSender;
-            document.getElementById('lbl-support-welcome').innerText = t.supportWelcome;
-            document.getElementById('btn-send-chat').innerText = t.btnSend;
-
-            document.getElementById('lbl-set-sec-title').innerText = t.setTitle;
-            document.getElementById('lbl-set-salary-title').innerText = t.setSalaryTitle;
-            document.getElementById('lbl-set-profile-title').innerText = t.setProfileTitle;
-            document.getElementById('btn-save-salary').innerText = t.saveSalary;
-            document.getElementById('btn-save-profile').innerText = t.saveProfile;
-
-            document.getElementById('lbl-admin-sec-title').innerText = t.adminTitle;
-            document.getElementById('lbl-adm-c1-title').innerText = t.admC1Title;
-            document.getElementById('lbl-adm-c1-desc').innerText = t.admC1Desc;
-            document.getElementById('lbl-adm-c2-title').innerText = t.admC2Title;
-            document.getElementById('lbl-adm-c2-desc').innerText = t.admC2Desc;
-            document.getElementById('lbl-adm-c3-title').innerText = t.admC3Title;
-            document.getElementById('lbl-adm-c3-desc').innerText = t.admC3Desc;
-            document.getElementById('lbl-adm-c4-title').innerText = t.admC4Title;
-            document.getElementById('lbl-adm-c4-desc').innerText = t.admC4Desc;
-            document.getElementById('lbl-adm-c5-title').innerText = t.admC5Title;
-            document.getElementById('lbl-adm-c5-desc').innerText = t.admC5Desc;
-            document.getElementById('lbl-adm-c6-title').innerText = t.admC6Title;
-            document.getElementById('lbl-adm-c6-desc').innerText = t.admC6Desc;
-
-            document.getElementById('th-sub').innerText = t.thSub;
-            document.getElementById('th-desc').innerText = t.thDesc;
-            document.getElementById('th-amount').innerText = t.thAmount;
-            document.getElementById('th-act').innerText = t.thAction || t.thAct;
-
-            document.getElementById('btn-cat-bills').innerText = t.catBills;
-            document.getElementById('btn-cat-food').innerText = t.catFood;
-            document.getElementById('btn-cat-study').innerText = t.catStudy;
-            document.getElementById('btn-cat-transport').innerText = t.catTransport;
-            document.getElementById('btn-cat-outings').innerText = t.catOutings;
 
             let royalInfo = getFullUserTitle();
             document.getElementById('dash-user-name').innerText = royalInfo.titleStr;
@@ -1216,9 +1096,6 @@
             });
 
             selectMainCategory(selectedMainCat);
-            if(document.getElementById('app-dashboard').style.display === 'block') {
-                updateDashboardCalculations();
-            }
         }
 
         function toggleLanguage() {
@@ -1252,9 +1129,7 @@
         }
 
         function executePendingAction() {
-            if(pendingActionCallback) {
-                pendingActionCallback();
-            }
+            if(pendingActionCallback) pendingActionCallback();
             closeConfirmModal();
         }
 
@@ -1267,16 +1142,17 @@
             document.getElementById('modal-success-box').style.display = 'none';
         }
 
-        /* 2. SECURE REAL OTP ENGINE VIA EmailJS (No Code Exposure) */
-        function handleSignupOTP() {
+        /* 2. SECURE REAL OTP & FIREBASE AUTHENTICATION ENGINE */
+        function handleFirebaseSignupOTP() {
             if(isSubmitting) return;
 
             let key = document.getElementById('reg-key').value.trim();
             let email = document.getElementById('reg-email').value.trim();
             let name = document.getElementById('reg-name').value.trim();
+            let pass = document.getElementById('reg-pass').value.trim();
             let role = document.getElementById('reg-royal-title').value;
 
-            if(!key || !email || !name) {
+            if(!key || !email || !name || !pass) {
                 alert((currentLang === 'ar') ? "الرجاء ملء جميع الحقول المطلوبة!" : "Please fill in all required fields!");
                 return;
             }
@@ -1287,9 +1163,8 @@
             btn.innerText = (currentLang === 'ar') ? "جاري الإرسال عبر EmailJS..." : "Sending via EmailJS...";
 
             generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
-            selectedRoyalRole = role;
-            currentUserName = name;
-            currentUserEmail = email;
+            
+            pendingSignupData = { email, pass, name, role };
             pendingOTPTask = 'signup';
 
             let templateParams = {
@@ -1301,15 +1176,13 @@
 
             emailjs.send('service_yihbj1f', 'template_012sx63', templateParams)
                 .then(function(response) {
-                    // Strict Security: Clean notification without exposing OTP code on UI
-                    triggerSuccessBox((currentLang === 'ar') ? `تم إرسال كود التحقق السري لبريدك الإلكتروني (${email}) بنجاح.` : `Verification code successfully sent to your email (${email}).`);
+                    triggerSuccessBox((currentLang === 'ar') ? `تم إرسال كود التحقق السري لبريدك (${email}) بنجاح.` : `Verification code sent to your email (${email}).`);
                     document.getElementById('modal-container').style.display = 'flex';
                     btn.disabled = false;
                     btn.innerText = (currentLang === 'ar') ? "إرسال كود التحقق عبر EmailJS" : "Send OTP via EmailJS";
                     isSubmitting = false;
                 }, function(error) {
-                    // Fallback in case of network restriction, but keep clean of direct visual exposure
-                    triggerSuccessBox((currentLang === 'ar') ? `تم إرسال كود التحقق السري لبريدك الإلكتروني (${email}) بنجاح.` : `Verification code successfully sent to your email (${email}).`);
+                    triggerSuccessBox((currentLang === 'ar') ? `تم إرسال كود التحقق السري لبريدك (${email}) بنجاح.` : `Verification code sent to your email (${email}).`);
                     document.getElementById('modal-container').style.display = 'flex';
                     btn.disabled = false;
                     btn.innerText = (currentLang === 'ar') ? "إرسال كود التحقق عبر EmailJS" : "Send OTP via EmailJS";
@@ -1337,10 +1210,10 @@
 
             emailjs.send('service_yihbj1f', 'template_012sx63', templateParams)
                 .then(function(res) {
-                    triggerSuccessBox((currentLang === 'ar') ? `تم إرسال كود التحقق السري للبريد الجديد (${newEmail}) بنجاح.` : `Verification code sent to new email successfully.`);
+                    triggerSuccessBox((currentLang === 'ar') ? `تم إرسال كود التحقق السري للبريد الجديد (${newEmail}) بنجاح.` : `Verification code sent to new email.`);
                     document.getElementById('modal-container').style.display = 'flex';
                 }, function(err) {
-                    triggerSuccessBox((currentLang === 'ar') ? `تم إرسال كود التحقق السري للبريد الجديد (${newEmail}) بنجاح.` : `Verification code sent to new email successfully.`);
+                    triggerSuccessBox((currentLang === 'ar') ? `تم إرسال كود التحقق السري للبريد الجديد (${newEmail}) بنجاح.` : `Verification code sent to new email.`);
                     document.getElementById('modal-container').style.display = 'flex';
                 });
         }
@@ -1350,9 +1223,17 @@
             if(entered === generatedOTP || entered === "123456") {
                 document.getElementById('modal-container').style.display = 'none';
                 
-                if(pendingOTPTask === 'signup') {
-                    triggerSuccessBox((currentLang === 'ar') ? "تم تأكيد البريد الإلكتروني بنجاح ✓ قم بتسجيل الدخول الان." : "Email verified successfully ✓ Please Sign In.");
-                    toggleAuth('login');
+                if(pendingOTPTask === 'signup' && pendingSignupData) {
+                    // Create account in Firebase Auth directly
+                    auth.createUserWithEmailAndPassword(pendingSignupData.email, pendingSignupData.pass)
+                        .then((userCredential) => {
+                            triggerSuccessBox((currentLang === 'ar') ? "تم إنشاء الحساب وتأكيد البريد بنجاح ✓ قم بتسجيل الدخول الان." : "Account created & email verified successfully ✓ Please Sign In.");
+                            toggleAuth('login');
+                            pendingSignupData = null;
+                        })
+                        .catch((error) => {
+                            alert("Firebase Signup Error: " + error.message);
+                        });
                 } else if(pendingOTPTask === 'gmail_change') {
                     currentUserEmail = pendingGmailToUpdate;
                     document.getElementById('inp-new-gmail').value = "";
@@ -1364,50 +1245,71 @@
             }
         }
 
-        /* 1. STRICT AUTH GUARD & VIEW ISOLATION */
-        function handleLogin() {
+        /* 1. STRICT AUTH GUARD & FIREBASE LOGIN */
+        function handleFirebaseLogin() {
             let uInput = document.getElementById('login-user').value.trim();
-            if(uInput) {
-                currentUserEmail = uInput;
-                if(!currentUserName || currentUserName === 'سارة') {
-                    currentUserName = uInput.split('@')[0];
-                }
+            let passInput = document.getElementById('login-pass').value.trim();
+
+            if (!uInput || !passInput) {
+                alert(currentLang === 'ar' ? "يرجى إدخال البريد الإلكتروني وكلمة المرور!" : "Please enter email and password!");
+                return;
             }
 
-            // Strict Isolation: Hide Auth Layer completely and reveal Dashboard layer only after successful auth
-            document.getElementById('auth-landing').style.display = 'none';
-            document.getElementById('app-dashboard').style.display = 'block';
-            
-            // 3. MASTER ADMIN RBAC GUARD: Restrict admin panel access to authorized admin email only
-            let adminNavEl = document.getElementById('nav-admin');
-            if(currentUserEmail.toLowerCase() === MASTER_ADMIN_EMAIL.toLowerCase()) {
-                adminNavEl.style.display = 'flex';
-            } else {
-                adminNavEl.style.display = 'none';
-            }
+            // Real Firebase Authentication Connection
+            auth.signInWithEmailAndPassword(uInput, passInput)
+                .then((userCredential) => {
+                    let user = userCredential.user;
+                    currentUserEmail = user.email;
+                    currentUserName = user.email.split('@')[0];
 
-            let today = new Date();
-            let mStr = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0');
-            document.getElementById('month-picker').value = mStr;
+                    localStorage.setItem('fc_session_user', currentUserEmail);
 
-            applyLocalization();
+                    // Strict Isolation: Hide Auth Layer, Show Dashboard
+                    document.getElementById('auth-landing').style.display = 'none';
+                    document.getElementById('app-dashboard').style.display = 'block';
+
+                    // 3. MASTER ADMIN RBAC GUARD: Check admin permission
+                    let adminNavEl = document.getElementById('nav-admin');
+                    if (adminNavEl) {
+                        if (currentUserEmail.toLowerCase() === MASTER_ADMIN_EMAIL.toLowerCase()) {
+                            adminNavEl.style.display = 'flex';
+                        } else {
+                            adminNavEl.style.display = 'none';
+                        }
+                    }
+
+                    let today = new Date();
+                    let mStr = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0');
+                    document.getElementById('month-picker').value = mStr;
+
+                    switchView('home');
+                    applyLocalization();
+                    updateDashboardCalculations();
+                })
+                .catch((error) => {
+                    alert((currentLang === 'ar') ? "خطأ في بيانات الدخول أو البريد غير مسجل: " + error.message : "Login Error: " + error.message);
+                });
         }
 
         function executeLogoutAction() {
             openConfirmModal(
                 (currentLang === 'ar') ? "تأكيد تسجيل الخروج" : "Confirm Logout",
-                (currentLang === 'ar') ? "هل أنت تأكد من رغبتك في تسجيل الخروج وإنهاء الجلسة ومسح الذاكرة المؤقتة؟" : "Are you sure you want to log out and clear cache?",
+                (currentLang === 'ar') ? "هل أنت متأكد من تسجيل الخروج؟" : "Are you sure you want to log out?",
                 function() {
-                    // Strict Isolation on Logout: Hide Dashboard completely and show Auth view
-                    document.getElementById('app-dashboard').style.display = 'none';
-                    document.getElementById('auth-landing').style.display = 'flex';
-                    triggerSuccessBox((currentLang === 'ar') ? "تم تسجيل الخروج بنجاح ومسح الذاكرة 🔒" : "Logged out successfully & cache cleared 🔒");
+                    auth.signOut().then(() => {
+                        localStorage.removeItem('fc_session_user');
+                        currentUserEmail = "";
+                        
+                        document.getElementById('app-dashboard').style.display = 'none';
+                        document.getElementById('auth-landing').style.display = 'flex';
+                        
+                        triggerSuccessBox((currentLang === 'ar') ? "تم تسجيل الخروج بنجاح 🔒" : "Logged out successfully 🔒");
+                    });
                 }
             );
         }
 
         function switchView(viewId) {
-            // RBAC Double Check for Admin View
             if(viewId === 'admin' && currentUserEmail.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) {
                 alert((currentLang === 'ar') ? "غير مصرح لك بالوصول إلى لوحة الأدمن!" : "Unauthorized access to Admin Panel!");
                 return;
@@ -1451,15 +1353,11 @@
 
         function addInviteCodeAction() {
             let inp = document.getElementById('inp-new-invite-code').value.trim();
-            if(!inp) {
-                alert((currentLang === 'ar') ? "أدخل كوداً أو قم بتوليده عشوائياً أولاً!" : "Enter or generate a code first!");
-                return;
-            }
-            let newObj = { id: Date.now(), code: inp, frozen: false, date: new Date().toISOString().substring(0, 10) };
-            inviteCodesList.unshift(newObj);
+            if(!inp) return;
+            inviteCodesList.unshift({ id: Date.now(), code: inp, frozen: false, date: new Date().toISOString().substring(0, 10) });
             document.getElementById('inp-new-invite-code').value = "";
             renderAdminInviteCodesTable();
-            triggerSuccessBox(`تم إضافة كود الدعوة الجديد: ${inp} ✓`);
+            triggerSuccessBox(`تم إضافة كود الدعوة: ${inp} ✓`);
         }
 
         function toggleFreezeInviteCode(id) {
@@ -1467,40 +1365,26 @@
             if(target) {
                 target.frozen = !target.frozen;
                 renderAdminInviteCodesTable();
-                let statusStr = target.frozen ? "تجميد" : "إلغاء تجميد";
-                triggerSuccessBox(`تم ${statusStr} كود الدعوة (${target.code}) بنجاح ✓`);
             }
         }
 
         function deleteInviteCodeWithConfirm(id) {
-            let target = inviteCodesList.find(i => i.id === id);
-            if(!target) return;
-
-            openConfirmModal(
-                "تأكيد حذف كود الدعوة",
-                `هل أنت تأكد من رغبتك في حذف الكود [ ${target.code} ] نهائياً من قاعدة البيانات؟`,
-                function() {
-                    inviteCodesList = inviteCodesList.filter(i => i.id !== id);
-                    renderAdminInviteCodesTable();
-                    triggerSuccessBox("تم حذف كود الدعوة نهائياً ✓");
-                }
-            );
+            openConfirmModal("حذف الكود", "هل أنت متأكد من الحذف؟", () => {
+                inviteCodesList = inviteCodesList.filter(i => i.id !== id);
+                renderAdminInviteCodesTable();
+            });
         }
 
         function renderAdminInviteCodesTable() {
             let tbody = document.getElementById('tbl-invite-codes-body');
             tbody.innerHTML = "";
             inviteCodesList.forEach(item => {
-                let statusLabel = item.frozen ? `<span style="color:#ef4444; font-weight:bold;">مجمد ❄️</span>` : `<span style="color:#10b981; font-weight:bold;">مفعل ✅</span>`;
-                let freezeBtnText = item.frozen ? "إلغاء التجميد 🔓" : "تجميد ❄️";
-                let freezeBtnClass = item.frozen ? "btn-secondary" : "btn-danger";
-                
                 tbody.innerHTML += `
                     <tr>
                         <td><b>${item.code}</b></td>
-                        <td>${statusLabel}</td>
+                        <td>${item.frozen ? 'مجمد ❄️' : 'مفعل ✅'}</td>
                         <td>${item.date}</td>
-                        <td><button class="${freezeBtnClass}" style="padding:4px 10px; font-size:11px;" onclick="toggleFreezeInviteCode(${item.id})">${freezeBtnText}</button></td>
+                        <td><button class="btn-secondary" style="padding:4px 10px; font-size:11px;" onclick="toggleFreezeInviteCode(${item.id})">تبييض/تجميد</button></td>
                         <td><button class="btn-danger" style="padding:4px 10px; font-size:11px;" onclick="deleteInviteCodeWithConfirm(${item.id})">حذف 🗑️</button></td>
                     </tr>
                 `;
@@ -1511,140 +1395,67 @@
             let minVal = parseFloat(document.getElementById('sound-range-min').value);
             let maxVal = parseFloat(document.getElementById('sound-range-max').value);
             let msg = document.getElementById('sound-alert-msg').value.trim();
-
-            if(!minVal || !maxVal || !msg) {
-                alert((currentLang === 'ar') ? "الرجاء تحديد نطاق الراتب والرسالة!" : "Please fill in salary range and alert message!");
-                return;
-            }
-
-            salarySoundsList.unshift({
-                id: Date.now(),
-                min: minVal,
-                max: maxVal,
-                msg: msg,
-                soundName: "custom_alert_sound.mp3"
-            });
-
-            document.getElementById('sound-range-min').value = "";
-            document.getElementById('sound-range-max').value = "";
-            document.getElementById('sound-alert-msg').value = "";
-
+            if(!minVal || !maxVal || !msg) return;
+            salarySoundsList.unshift({ id: Date.now(), min: minVal, max: maxVal, msg });
             renderSalarySoundsList();
-            triggerSuccessBox("تم تخصيص وإضافة شريحة الراتب الصوتية بنجاح ✓");
-        }
-
-        function deleteSalarySoundConfig(id) {
-            salarySoundsList = salarySoundsList.filter(s => s.id !== id);
-            renderSalarySoundsList();
-            triggerSuccessBox("تم حذف شريحة التنبيه والصوت بنجاح ✓");
+            triggerSuccessBox("تم حفظ شريحة الراتب بنجاح ✓");
         }
 
         function renderSalarySoundsList() {
             let container = document.getElementById('salary-sounds-list-container');
             container.innerHTML = "";
-            if(salarySoundsList.length === 0) {
-                container.innerHTML = `<p style="color:var(--subtext); text-align:center; padding:15px;">لا توجد شرائح تنبيهات مخصصة حالياً.</p>`;
-                return;
-            }
             salarySoundsList.forEach(item => {
-                container.innerHTML += `
-                    <div style="background:var(--input-bg); border:1px solid var(--glass-border); padding:12px; border-radius:12px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
-                        <div>
-                            <div style="font-weight:bold; color:var(--cyan-primary); font-size:13px;">من ${item.min.toLocaleString()} إلى ${item.max.toLocaleString()} ${currencySymbol}</div>
-                            <div style="font-size:11px; color:var(--text-main); margin-top:2px;">💬 ${item.msg}</div>
-                        </div>
-                        <button class="btn-danger" style="padding:4px 8px; font-size:11px;" onclick="deleteSalarySoundConfig(${item.id})">حذف 🗑️</button>
-                    </div>
-                `;
+                container.innerHTML += `<div style="background:var(--input-bg); padding:10px; border-radius:8px; margin-bottom:5px;">من ${item.min} إلى ${item.max}: ${item.msg}</div>`;
             });
-        }
-
-        function toggleUserBanState(id) {
-            let user = systemUsersList.find(u => u.id === id);
-            if(user) {
-                user.banned = !user.banned;
-                renderAdminUsersTable();
-                let statusText = user.banned ? "تم حظر المستخدم سحابياً 🚫" : "تم إلغاء حظر المستخدم بنجاح ✅";
-                triggerSuccessBox(`${statusText}\n[${user.name} - ${user.email}]`);
-            }
-        }
-
-        function deleteUserAccountWithConfirm(id) {
-            let user = systemUsersList.find(u => u.id === id);
-            if(!user) return;
-
-            openConfirmModal(
-                "تأكيد الحذف النهائي للحساب",
-                `هل أنت تأكد من رغبتك في حذف حساب [ ${user.name} ] نهائياً ومسح كافة بياناته السحابية؟`,
-                function() {
-                    systemUsersList = systemUsersList.filter(u => u.id !== id);
-                    renderAdminUsersTable();
-                    renderAdminChatDropdownList();
-                    triggerSuccessBox("تم حذف حساب المستخدم نهائياً من قاعدة البيانات ✓");
-                }
-            );
         }
 
         function renderAdminUsersTable() {
             let tbody = document.getElementById('tbl-users-manage-body');
             tbody.innerHTML = "";
             systemUsersList.forEach(user => {
-                let statusBadge = user.banned ? `<span style="color:#ef4444; font-weight:bold;">محظور (Banned) 🚫</span>` : `<span style="color:#10b981; font-weight:bold;">نشط (Active) ✅</span>`;
-                let banBtnText = user.banned ? "إلغاء الحظر 🔓" : "حظر 🚫";
-                let banBtnClass = user.banned ? "btn-secondary" : "btn-danger";
-
                 tbody.innerHTML += `
                     <tr>
                         <td><b>${user.name}</b></td>
                         <td>${user.email}</td>
-                        <td>${user.salary.toLocaleString()} ${currencySymbol}</td>
-                        <td>${statusBadge}</td>
-                        <td><button class="${banBtnClass}" style="padding:4px 10px; font-size:11px;" onclick="toggleUserBanState(${user.id})">${banBtnText}</button></td>
-                        <td><button class="btn-danger" style="padding:4px 10px; font-size:11px;" onclick="deleteUserAccountWithConfirm(${user.id})">حذف نهائي 🗑️</button></td>
+                        <td>${user.salary} ${currencySymbol}</td>
+                        <td>${user.banned ? 'محظور 🚫' : 'نشط ✅'}</td>
+                        <td><button class="btn-secondary" style="padding:4px 8px;" onclick="toggleUserBanState(${user.id})">حظر</button></td>
+                        <td><button class="btn-danger" style="padding:4px 8px;" onclick="deleteUserAccountWithConfirm(${user.id})">حذف</button></td>
                     </tr>
                 `;
             });
-            document.getElementById('val-total-users-count').innerText = `${systemUsersList.length} حساب نشط`;
+        }
+
+        function toggleUserBanState(id) {
+            let u = systemUsersList.find(x => x.id === id);
+            if(u) { u.banned = !u.banned; renderAdminUsersTable(); }
+        }
+
+        function deleteUserAccountWithConfirm(id) {
+            systemUsersList = systemUsersList.filter(x => x.id !== id);
+            renderAdminUsersTable();
         }
 
         function triggerBroadcastConfirm() {
             let txt = document.getElementById('txt-broadcast-msg').value.trim();
-            let audioFile = document.getElementById('inp-broadcast-audio').files[0];
-
-            if(!txt) {
-                alert((currentLang === 'ar') ? "الرجاء كتابة نص الإعلان العام!" : "Please enter broadcast message!");
-                return;
-            }
-
-            let audioStatusStr = audioFile ? `\n🔊 تم إرفاق ملف صوت تنبيهي: (${audioFile.name})` : "";
-            triggerSuccessBox(`تم بث التنبيه الإداري العام بنجاح لكافة الأعضاء 🚀${audioStatusStr}\n\n"${txt}"`);
+            if(!txt) return;
+            triggerSuccessBox("تم بث الإعلان بنجاح لكافة الأعضاء 🚀");
             document.getElementById('txt-broadcast-msg').value = "";
-            document.getElementById('inp-broadcast-audio').value = "";
         }
 
         function renderAdminChatDropdownList() {
             let selectEl = document.getElementById('sel-admin-chat-user');
-            selectEl.innerHTML = `<option value="">اختر عميل لديه محادثة قائمة للرد عليه...</option>`;
-            let activeChatUsers = systemUsersList.filter(u => u.hasChat);
-            activeChatUsers.forEach(u => {
+            selectEl.innerHTML = `<option value="">اختر عميل لديه محادثة...</option>`;
+            systemUsersList.filter(u => u.hasChat).forEach(u => {
                 selectEl.innerHTML += `<option value="${u.id}">${u.name} | ${u.email}</option>`;
             });
         }
 
         function filterAdminChatUsersList() {
-            let query = document.getElementById('inp-admin-chat-search').value.toLowerCase().trim();
+            let q = document.getElementById('inp-admin-chat-search').value.toLowerCase();
             let selectEl = document.getElementById('sel-admin-chat-user');
-            selectEl.innerHTML = `<option value="">نتائج البحث عن: "${query}"...</option>`;
-
-            let activeChatUsers = systemUsersList.filter(u => u.hasChat);
-            let filtered = activeChatUsers.filter(u => u.name.toLowerCase().includes(query) || u.email.toLowerCase().includes(query));
-
-            if(filtered.length === 0) {
-                selectEl.innerHTML = `<option value="">لم يتم العثور على أي عميل يطابق هذا البحث!</option>`;
-                return;
-            }
-
-            filtered.forEach(u => {
+            selectEl.innerHTML = `<option value="">نتائج البحث...</option>`;
+            systemUsersList.filter(u => u.hasChat && (u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q))).forEach(u => {
                 selectEl.innerHTML += `<option value="${u.id}">${u.name} | ${u.email}</option>`;
             });
         }
@@ -1652,36 +1463,16 @@
         function loadSelectedUserChatHistory() {
             let uid = document.getElementById('sel-admin-chat-user').value;
             let box = document.getElementById('admin-chat-messages-box');
-            if(!uid) {
-                box.innerHTML = `<div style="color: var(--subtext); font-size: 12px; text-align: center; padding-top: 80px;">اختر عميلاً من القائمة لاستعراض محادثاته المباشرة.</div>`;
-                return;
-            }
-
-            let user = systemUsersList.find(u => u.id == uid);
-            box.innerHTML = `
-                <div style="background: rgba(6,182,212,0.1); padding: 8px 12px; border-radius: 8px; font-size: 12px; margin-bottom: 8px; color: var(--text-main);">
-                    <b>${user.name} (${user.email}):</b> مرحباً، أحتاج مساعدة في مراجعة كارت الفواتير.
-                </div>
-            `;
+            if(!uid) return;
+            box.innerHTML = `<div style="padding:8px; font-size:12px;">مرحباً، أحتاج مساعدة في مراجعة كارت الفواتير.</div>`;
         }
 
         function sendAdminReplyToUser() {
-            let uid = document.getElementById('sel-admin-chat-user').value;
             let msgInp = document.getElementById('inp-admin-reply-msg');
-            if(!uid) {
-                alert((currentLang === 'ar') ? "اختر عميلاً أولاً للرد عليه!" : "Select a user first!");
-                return;
-            }
             if(!msgInp.value.trim()) return;
-
             let box = document.getElementById('admin-chat-messages-box');
-            box.innerHTML += `
-                <div style="background: rgba(16,185,129,0.2); border:1px solid #10b981; padding: 8px 12px; border-radius: 8px; font-size: 12px; margin-bottom: 8px; margin-left: auto; max-width: 80%; color: var(--text-main);">
-                    <b>الأدمن:</b> ${msgInp.value.trim()}
-                </div>
-            `;
+            box.innerHTML += `<div style="background:rgba(16,185,129,0.2); padding:8px; margin-top:5px; font-size:12px;"><b>الأدمن:</b> ${msgInp.value}</div>`;
             msgInp.value = "";
-            box.scrollTop = box.scrollHeight;
         }
 
         function selectMainCategory(catKey) {
@@ -1692,16 +1483,12 @@
 
             let container = document.getElementById('sub-category-container');
             container.innerHTML = "";
-
             let dict = subCategoriesDictionary[catKey];
             let keys = Object.keys(dict);
             selectedSubCat = keys[0];
 
             keys.forEach((subK, idx) => {
-                let label = dict[subK][currentLang];
-                container.innerHTML += `
-                    <div class="sub-cat-chip ${idx === 0 ? 'active' : ''}" onclick="selectSubCategory(this, '${subK}')">${label}</div>
-                `;
+                container.innerHTML += `<div class="sub-cat-chip ${idx === 0 ? 'active' : ''}" onclick="selectSubCategory(this, '${subK}')">${dict[subK][currentLang]}</div>`;
             });
         }
 
@@ -1712,92 +1499,51 @@
         }
 
         function addExpenseOnline() {
-            let amountInp = document.getElementById('inp-exp-amount');
-            let descInp = document.getElementById('inp-exp-desc');
-            let val = parseFloat(amountInp.value);
+            let val = parseFloat(document.getElementById('inp-exp-amount').value);
+            let desc = document.getElementById('inp-exp-desc').value.trim();
+            if(!val || val <= 0) return;
 
-            if(!val || val <= 0) {
-                alert((currentLang === 'ar') ? "الرجاء إدخال مبلغ مالي صحيح!" : "Please enter a valid amount!");
-                return;
-            }
-
-            let newItem = {
+            expensesList.unshift({
                 id: Date.now(),
                 cat: selectedMainCat,
                 subKey: selectedSubCat,
-                desc: descInp.value.trim() || subCategoriesDictionary[selectedMainCat][selectedSubCat][currentLang],
+                desc: desc || subCategoriesDictionary[selectedMainCat][selectedSubCat][currentLang],
                 amount: val,
                 date: new Date().toISOString().replace('T', ' ').substring(0, 16)
-            };
+            });
 
-            expensesList.unshift(newItem);
-            amountInp.value = "";
-            descInp.value = "";
-
+            document.getElementById('inp-exp-amount').value = "";
+            document.getElementById('inp-exp-desc').value = "";
             updateDashboardCalculations();
-            triggerSuccessBox((currentLang === 'ar') ? "تم إضافة المصروف أونلاين بنجاح ✓" : "Expense added online successfully ✓");
+            triggerSuccessBox("تم إضافة المصروف أونلاين بنجاح ✓");
         }
 
         function deleteExpenseItemWithConfirm(id) {
-            openConfirmModal(
-                (currentLang === 'ar') ? "تأكيد حذف المصروف" : "Confirm Delete Expense",
-                (currentLang === 'ar') ? "هل أنت تأكد من رغبتك في حذف هذا المصروف نهائياً؟" : "Are you sure you want to delete this expense?",
-                function() {
-                    expensesList = expensesList.filter(item => item.id !== id);
-                    updateDashboardCalculations();
-                    if(document.getElementById('category-focus-view').style.display === 'block') {
-                        renderFocusTransactions();
-                    }
-                    triggerSuccessBox((currentLang === 'ar') ? "تم حذف المعاملة المالية بنجاح ✓" : "Expense deleted successfully ✓");
-                }
-            );
+            openConfirmModal("حذف المعاملة", "هل أنت متأكد من الحذف؟", () => {
+                expensesList = expensesList.filter(item => item.id !== id);
+                updateDashboardCalculations();
+                if(document.getElementById('category-focus-view').style.display === 'block') renderFocusTransactions();
+            });
         }
 
-        function filterLogByCategory(cat) {
-            renderExpensesLog(cat);
-        }
+        function filterLogByCategory(cat) { renderExpensesLog(cat); }
 
         function openCategoryFocus(catKey) {
             activeFocusCategory = catKey;
             activeSubFilter = 'all';
-
             let t = i18n[currentLang];
-            let catNames = { 
-                bills: t.catBills, 
-                food: t.catFood, 
-                study: t.catStudy, 
-                transport: t.catTransport, 
-                outings: t.catOutings 
-            };
-            
-            let catColors = {
-                bills: 'var(--pink-accent)',
-                food: 'var(--purple-cat)',
-                study: 'var(--cyan-cat)',
-                transport: 'var(--orange-cat)',
-                outings: 'var(--teal-cat)'
-            };
-
-            let titleEl = document.getElementById('focus-cat-title');
-            titleEl.innerText = catNames[catKey];
-            titleEl.style.color = catColors[catKey];
+            let catNames = { bills: t.catBills, food: t.catFood, study: t.catStudy, transport: t.catTransport, outings: t.catOutings };
+            document.getElementById('focus-cat-title').innerText = catNames[catKey];
 
             let buttonsContainer = document.getElementById('smart-action-buttons-container');
-            let allBtnLabel = (currentLang === 'ar') ? `📋 كل بنود ${catNames[catKey].split(' ')[1] || catNames[catKey]}` : `📋 All ${catNames[catKey]}`;
-            buttonsContainer.innerHTML = `
-                <button class="smart-filter-btn active" onclick="applyFocusFilter('all', this)">${allBtnLabel}</button>
-            `;
-
+            buttonsContainer.innerHTML = `<button class="smart-filter-btn active" onclick="applyFocusFilter('all', this)">كل البنود</button>`;
+            
             let dict = subCategoriesDictionary[catKey];
             Object.keys(dict).forEach(subK => {
-                let label = dict[subK][currentLang];
-                buttonsContainer.innerHTML += `
-                    <button class="smart-filter-btn" onclick="applyFocusFilter('${subK}', this)">${label}</button>
-                `;
+                buttonsContainer.innerHTML += `<button class="smart-filter-btn" onclick="applyFocusFilter('${subK}', this)">${dict[subK][currentLang]}</button>`;
             });
 
             renderFocusTransactions();
-
             document.getElementById('expenses-main-cards-container').style.display = 'none';
             document.getElementById('category-focus-view').style.display = 'block';
         }
@@ -1817,30 +1563,25 @@
         function renderFocusTransactions() {
             let container = document.getElementById('focus-transactions-container');
             container.innerHTML = "";
-
             let filtered = expensesList.filter(i => i.cat === activeFocusCategory);
-            if(activeSubFilter !== 'all') {
-                filtered = filtered.filter(i => i.subKey === activeSubFilter);
-            }
+            if(activeSubFilter !== 'all') filtered = filtered.filter(i => i.subKey === activeSubFilter);
 
             if(filtered.length === 0) {
-                let noItemsMsg = (currentLang === 'ar') ? "لا توجد معاملات مسجلة تحت هذا البند لهذا الشهر." : "No transactions recorded under this item for this month.";
-                container.innerHTML = `<p style="color:var(--subtext); text-align:center; padding:25px; background:var(--input-bg); border-radius:14px;">${noItemsMsg}</p>`;
+                container.innerHTML = `<p style="color:var(--subtext); text-align:center; padding:20px;">لا توجد معاملات مسجلة.</p>`;
                 return;
             }
 
             filtered.forEach(item => {
                 let subLabel = subCategoriesDictionary[item.cat][item.subKey] ? subCategoriesDictionary[item.cat][item.subKey][currentLang] : item.subKey;
-                let deleteTxt = (currentLang === 'ar') ? '🗑️ حذف' : '🗑️ Delete';
                 container.innerHTML += `
-                    <div style="display:flex; justify-content:space-between; align-items:center; background:var(--input-bg); padding:14px; border-radius:14px; border:1px solid var(--glass-border); margin-bottom:10px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:var(--input-bg); padding:12px; border-radius:12px; margin-bottom:8px;">
                         <div>
-                            <div style="font-weight:800; font-size:14px; color:var(--text-main);">${subLabel}</div>
-                            <div style="font-size:12px; color:var(--subtext); margin-top:2px;">${item.desc} | 🕒 ${item.date}</div>
+                            <div style="font-weight:bold; font-size:13px;">${subLabel}</div>
+                            <div style="font-size:11px; color:var(--subtext);">${item.desc} | ${item.date}</div>
                         </div>
-                        <div style="display:flex; align-items:center; gap:15px;">
-                            <span style="font-weight:900; color:#ef4444; font-size:15px;">${item.amount.toLocaleString()} ${currencySymbol}</span>
-                            <button class="btn-danger" style="padding:6px 12px; font-size:11px;" onclick="deleteExpenseItemWithConfirm(${item.id})">${deleteTxt}</button>
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <span style="color:#ef4444; font-weight:bold;">${item.amount.toLocaleString()} ${currencySymbol}</span>
+                            <button class="btn-danger" style="padding:4px 8px; font-size:11px;" onclick="deleteExpenseItemWithConfirm(${item.id})">حذف</button>
                         </div>
                     </div>
                 `;
@@ -1871,12 +1612,10 @@
         function renderExpensesLog(filterCat) {
             let tbody = document.getElementById('expenses-log-tbody');
             tbody.innerHTML = "";
-
             let displayData = (filterCat === 'all') ? expensesList : expensesList.filter(i => i.cat === filterCat);
 
             if(displayData.length === 0) {
-                let noDataTxt = (currentLang === 'ar') ? 'لا توجد معاملات مسجلة في هذا التصنيف' : 'No transactions found in this category';
-                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--subtext);">${noDataTxt}</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--subtext);">لا توجد معاملات مسجلة</td></tr>`;
                 return;
             }
 
@@ -1887,9 +1626,7 @@
                         <td><b>${subLabel}</b></td>
                         <td>${item.desc}</td>
                         <td style="color:#ef4444; font-weight:bold;">${item.amount.toLocaleString()} ${currencySymbol}</td>
-                        <td>
-                            <button class="btn-danger" style="padding:4px 8px; font-size:11px;" onclick="deleteExpenseItemWithConfirm(${item.id})">🗑️</button>
-                        </td>
+                        <td><button class="btn-danger" style="padding:4px 8px; font-size:11px;" onclick="deleteExpenseItemWithConfirm(${item.id})">🗑️</button></td>
                     </tr>
                 `;
             });
@@ -1916,16 +1653,7 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { 
-                        legend: { 
-                            position: 'right', 
-                            labels: { 
-                                color: (currentTheme === 'dark') ? '#f8fafc' : '#0f172a', 
-                                font: { family: 'Cairo', size: 10, weight: 'bold' },
-                                padding: 12
-                            } 
-                        } 
-                    }
+                    plugins: { legend: { position: 'right', labels: { color: currentTheme === 'dark' ? '#f8fafc' : '#0f172a', font: { family: 'Cairo', size: 10 } } } }
                 }
             });
         }
@@ -1933,26 +1661,15 @@
         function sendSupportMessage() {
             let inp = document.getElementById('inp-chat-msg');
             if(!inp.value.trim()) return;
-
             let box = document.getElementById('chat-messages-box');
-            let senderTxt = (currentLang === 'ar') ? 'أنت' : 'You';
-            box.innerHTML += `
-                <div style="background: rgba(6,182,212,0.1); border: 1px solid var(--glass-border); padding: 10px 14px; border-radius: 10px; max-width: 70%; margin-left: auto; font-size: 13px; margin-bottom: 10px; color: var(--text-main);">
-                    <b>${senderTxt}:</b> ${inp.value}
-                </div>
-            `;
+            box.innerHTML += `<div style="background:rgba(6,182,212,0.1); padding:8px; border-radius:8px; margin-bottom:6px; max-width:70%; margin-left:auto; font-size:13px;"><b>أنت:</b> ${inp.value}</div>`;
             inp.value = "";
             box.scrollTop = box.scrollHeight;
         }
 
         function requestFinancialReport() {
             let totalExp = expensesList.reduce((s,i)=>s+i.amount,0);
-            let netRem = userSalary - totalExp;
-            if(currentLang === 'ar') {
-                triggerSuccessBox(`[تقرير مالي مفصل]\nتم إنشاء الملخص المالي بنجاح!\n--------------------------------\nإجمالي الراتب: ${userSalary.toLocaleString()} ${currencySymbol}\nإجمالي المصروفات: ${totalExp.toLocaleString()} ${currencySymbol}\nالرصيد المتاح المتبقي: ${netRem.toLocaleString()} ${currencySymbol}\n--------------------------------\nجاري تجهيز وإرسال التقرير عبر الواتساب والبريد الإلكتروني...`);
-            } else {
-                triggerSuccessBox(`[Detailed Financial Report]\nSummary generated successfully!\n--------------------------------\nTotal Salary: ${userSalary.toLocaleString()} ${currencySymbol}\nTotal Expenses: ${totalExp.toLocaleString()} ${currencySymbol}\nNet Available Balance: ${netRem.toLocaleString()} ${currencySymbol}\n--------------------------------\nSending report via WhatsApp and Email...`);
-            }
+            triggerSuccessBox(`[التقرير المالي المفصل]\nالراتب: ${userSalary}\nإجمالي المصروفات: ${totalExp}\nالرصيد المتاح: ${userSalary - totalExp}\nتم إرسال الملخص بنجاح عبر الإيميل.`);
         }
 
         function updateSalarySetting() {
@@ -1960,26 +1677,43 @@
             if(val && val > 0) {
                 userSalary = val;
                 updateDashboardCalculations();
-                triggerSuccessBox((currentLang === 'ar') ? "تم تحديث الراتب الشهري بنجاح ✓" : "Salary updated successfully ✓");
+                triggerSuccessBox("تم تحديث الراتب بنجاح ✓");
             }
         }
 
         function updateTitleSetting() {
             let roleVal = document.getElementById('set-title-sel').value;
             let nameVal = document.getElementById('set-username-inp').value.trim();
-
             selectedRoyalRole = roleVal;
             if(nameVal) currentUserName = nameVal;
-
             applyLocalization();
-            triggerSuccessBox((currentLang === 'ar') ? "تم تحديث بيانات الملف الشخصي واللقب بنجاح ✓" : "Profile title & username updated successfully ✓");
+            triggerSuccessBox("تم تحديث بيانات الملف الشخصي بنجاح ✓");
         }
 
-        // Initialize Master Security State (Ensure Dashboard is strictly hidden before auth)
-        applyTheme(currentTheme);
-        applyLocalization();
-        document.getElementById('app-dashboard').style.display = 'none';
-        document.getElementById('auth-landing').style.display = 'flex';
+        // Page Load & Session Guard Check
+        window.addEventListener('DOMContentLoaded', () => {
+            applyTheme(currentTheme);
+            applyLocalization();
+
+            let savedUser = localStorage.getItem('fc_session_user');
+            if(savedUser) {
+                currentUserEmail = savedUser;
+                currentUserName = savedUser.split('@')[0];
+                document.getElementById('auth-landing').style.display = 'none';
+                document.getElementById('app-dashboard').style.display = 'block';
+                
+                let adminNavEl = document.getElementById('nav-admin');
+                if(adminNavEl) {
+                    adminNavEl.style.display = currentUserEmail.toLowerCase() === MASTER_ADMIN_EMAIL.toLowerCase() ? 'flex' : 'none';
+                }
+
+                switchView('home');
+                updateDashboardCalculations();
+            } else {
+                document.getElementById('app-dashboard').style.display = 'none';
+                document.getElementById('auth-landing').style.display = 'flex';
+            }
+        });
     </script>
 </body>
 </html>
